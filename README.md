@@ -18,7 +18,7 @@ be split further into train, validation, and test datasets based on the subjects
 
 3. Test dataset: user-22 to user-27
 
-##Additional Hints:
+## Additional Hints:
 1. The units used for the accelerations (total and body) are ’g’s (gravity of earth which is 9.80665 m/s2)
 
 2. The gyroscope units are rad/sec.

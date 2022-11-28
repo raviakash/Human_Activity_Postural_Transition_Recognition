@@ -106,7 +106,7 @@ if torch.cuda.is_available():
     device = torch.device('cuda')
 
 # load data
-X, y = GenerateHARData().run()
+X, y = GenerateHAPTData().run()
 # trainsform data
 XT = torch.from_numpy(X)
 XT = XT.transpose(1,2).float() #input is (N, Cin, Lin) = Ntimesteps, Nfeatures, 128

@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 import os
+from torch.utils.data import Dataset, random_split, DataLoader
 from datetime import datetime
 import matplotlib.pyplot as plt
 # deep learning packages
@@ -142,70 +143,25 @@ def plot_Learning_curve(train_history):
     plt.title("Learning Curve of Pre-trained Encoder")
 
 
-def train_model(X, y, verbose=1, epochs=10, batch_size=32, \
-                filters=32, kernel=7, feature_num=100, plot_acc=False):
-    """pre-training process of the PN Encoder"""
-    # get dimension
-    n_timesteps = X.shape[1]
-    n_features = X.shape[2]
-    n_outputs = y.shape[1]
-    # define model structure
-    model = Sequential()
-    model.add(Conv1D(filters=filters, kernel_size=kernel, activation='relu', input_shape=(n_timesteps, n_features)))
-    model.add(Conv1D(filters=filters, kernel_size=kernel, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(MaxPooling1D(pool_size=2))
-    model.add(Flatten())
-    model.add(Dense(feature_num, activation='relu', name="feature"))
-    model.add(Dense(n_outputs, activation='softmax'))
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    # fit network
-    train_history = \
-        model.fit(X, y, epochs=epochs, batch_size=batch_size, verbose=verbose)
-    # evaluate model on test set
-    # _, accuracy = model.evaluate(X, y, batch_size=batch_size, verbose=0)
-    # result
-    # plot_Learning_curve(train_history)
-    # print(accuracy)
-    return model
+class CSVDataset(Dataset):
+    # load the dataset
+    def __init__(self, X, y):
+        # store the inputs and outputs
+        self.X = X
+        self.y = y
+
+    # number of rows in the dataset
+    def __len__(self):
+        return len(self.X)
+
+    # get a row at an index
+    def __getitem__(self, idx):
+        return [self.X[idx], self.y[idx]]
+
+    def get_splits(self, train_rate):
+        n_data = len(self.X)
+        train_size = int(n_data * train_rate)
+        test_size = n_data - train_size
+        return random_split(self, [train_size, test_size])
 
 
-def train_encoder(X, y, verbose=1, epochs=10, batch_size=32, \
-                  filters=32, kernel=7, feature_num=100):
-    # get dimension
-    n_timesteps = X.shape[1]
-    n_features = X.shape[2]
-    n_outputs = y.shape[1]
-    # define model structure
-    model = Sequential()
-    model.add(Conv1D(filters=filters, kernel_size=kernel, activation='relu', \
-                     input_shape=(n_timesteps, n_features)))
-    model.add(Conv1D(filters=filters, kernel_size=kernel, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(MaxPooling1D(pool_size=2))
-    model.add(Flatten(name="flatten"))
-    model.add(Dense(feature_num, activation='relu', name="feature"))
-    model.add(Dense(n_outputs, activation='softmax'))
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    # fit network
-    train_history = \
-        model.fit(X, y, epochs=epochs, \
-                  batch_size=batch_size, verbose=verbose)
-    # save the model
-    current_time = datetime.now().strftime("%d_%m_%Y__%H_%M_%S")
-    model_path = os.path.join("Encoder_models", current_time)
-    model.save(model_path)
-
-
-# %%
-if __name__ == "__main__":
-    # data generation test
-    # X, y = GenerateHAPTData().run()
-    # X, y = GenerateHARData().run()
-    # train_model(X, y)
-
-    # pre-trained model training
-    X, y = GenerateHAPTData().run(change=3)
-    train_encoder(X, y)
-
-# %%

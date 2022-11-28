@@ -1,32 +1,5 @@
-#%%
-import torch
 import torch.nn as nn
-import numpy as np
-import matplotlib.pyplot as plt
-from DataGeneration import GenerateHARData, GenerateHAPTData
-from torch.utils.data import Dataset, random_split, DataLoader
-from sklearn.metrics import accuracy_score
 
-class CSVDataset(Dataset):
-    # load the dataset
-    def __init__(self, X, y):
-        # store the inputs and outputs
-        self.X = X
-        self.y = y
- 
-    # number of rows in the dataset
-    def __len__(self):
-        return len(self.X)
- 
-    # get a row at an index
-    def __getitem__(self, idx):
-        return [self.X[idx], self.y[idx]]
-    
-    def get_splits(self, train_rate):
-        n_data = len(self.X)
-        train_size = int(n_data*train_rate)
-        test_size = n_data - train_size
-        return random_split(self, [train_size, test_size])
 
 class OneDCNN(nn.Module):
     def __init__(self, n_timesteps, n_features, n_outputs):
@@ -51,80 +24,35 @@ class OneDCNN(nn.Module):
         out = self.layer4(out)
         return out
 
-def train_model(train_dl, model, epoch):
-    criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters())
-    # enumerate epochs
-    accuracy = list()
-    for epoch in range(epoch):
-        predictions, actuals = list(), list()
-        # enumerate mini batches
-        for i, (inputs, targets) in enumerate(train_dl):
-            # clear the gradients
-            optimizer.zero_grad()
-            # compute the model output
-            yhat = model(inputs)
-            # calculate loss
-            loss = criterion(yhat, targets)
-            # credit assignment
-            loss.backward()
-            # update model weights
-            optimizer.step()
-            # record
-            predictions.append(np.argmax(yhat.detach().numpy(), axis=1))
-            actuals.append(np.argmax(targets.numpy(), axis=1))
-        predictions, actuals = np.concatenate(predictions), np.concatenate(actuals)
-        acc = accuracy_score(actuals, predictions)
-        accuracy.append(acc)
-        print(f"Epoch: {epoch+1}; Accuracy: {acc}")
 
-    # visualization
-    plt.title('Training Accuracy')
-    plt.ylabel('Accuracy')
-    plt.xlabel('Epoch')
-    plt.grid(True)
-    plt.autoscale(axis='x', tight=True)
-    plt.plot(accuracy)
-    plt.show()
+class LSTM(nn.Module):
 
-def model_evaluation(test_dl, model):
-    predictions, actuals = list(), list()
-    for i, (inputs, targets) in enumerate(test_dl):
-        # evaluate the model on the test set
-        yhat = model(inputs)
-        # retrieve numpy array
-        predictions.append(np.argmax(yhat.detach().numpy(), axis=1))
-        actuals.append(np.argmax(targets.numpy(), axis=1))
-    predictions, actuals = np.concatenate(predictions), np.concatenate(actuals)
-    # calculate accuracy
-    acc = accuracy_score(actuals, predictions)
-    print(f"Test Accuracy: {acc}")
+    def __init__(self, n_timesteps, n_features, n_outputs):
+        super(LSTM, self).__init__()
+        self.layer1 = nn.Sequential(
+            nn.Linear(n_timesteps, 256),
+            nn.ReLU())
+        self.layer2 = nn.LSTM(256, 256, 2)
+        self.layer3 = nn.Sequential(
+            nn.Linear(256, n_outputs),
+            nn.Softmax(dim=1))
 
-#%%
-device = torch.device('cpu')
-if torch.cuda.is_available():
-    device = torch.device('cuda')
+    def step(self, input, hidden=None):
+        input = self.layer1(input).unsqueeze(1)
+        output, hidden = self.layer2(input, hidden)
+        output = self.layer3(output.squeeze(1))
+        return output, hidden
 
-# load data
-X, y = GenerateHAPTData().run()
-# trainsform data
-XT = torch.from_numpy(X)
-XT = XT.transpose(1,2).float() #input is (N, Cin, Lin) = Ntimesteps, Nfeatures, 128
-yT = torch.from_numpy(y).float()
+    def forward(self, x, hidden=None):
+        outputs = torch.zeros(32, 6, 12)
 
-data = CSVDataset(XT, yT)
-train, test = data.get_splits(train_rate=0.8)
-# create a data loader for train and test sets
-train_dl = DataLoader(train, batch_size=32, shuffle=True)
-test_dl = DataLoader(test, batch_size=1024, shuffle=False)
+        for i in range(6):
+            input = x[:, i]
 
-n_timesteps =  XT.shape[2]
-n_features = XT.shape[1]
-n_outputs = yT.shape[1]
+            # print(input.shape)
+            output, hidden = self.step(input, hidden)
 
-#%%
-model = OneDCNN(n_timesteps, n_features, n_outputs)
-train_model(train_dl, model, epoch=10)
-model_evaluation(test_dl, model)
+            # print(output.shape)
+            outputs[:, i] = output
 
-# %%
+        return outputs

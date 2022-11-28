@@ -5,11 +5,12 @@ import matplotlib.pyplot as plt
 from DataGeneration import GenerateHARData, GenerateHAPTData, CSVDataset
 from torch.utils.data import Dataset, random_split, DataLoader
 from sklearn.metrics import accuracy_score
-from Pytorch_model import OneDCNN
+from Pytorch_model import OneDCNN, LSTM
 
 
 def train_model(train_dl, model, epoch):
     # define loss function
+    model = model.float()
     criterion = nn.CrossEntropyLoss()
     # define optimizer (you can try to change optimizer)
     optimizer = torch.optim.Adam(model.parameters(), lr=.001)
@@ -22,9 +23,11 @@ def train_model(train_dl, model, epoch):
             # clear the gradients
             optimizer.zero_grad()
             # compute the model output
-            yhat = model(inputs)
+            if i == 0:
+                print(inputs.shape)
+            yhat = model(inputs.float())
             # calculate loss
-            loss = criterion(yhat, targets)
+            loss = criterion(yhat, targets.long())
             # credit assignment
             loss.backward()
             # update model weights
@@ -70,7 +73,7 @@ if __name__ == '__main__':
     X, y = GenerateHAPTData().run()
     print(X.shape)
     # transform data
-    XT_lstm = torch.from_numpy(X)
+    XT_lstm = torch.from_numpy(X).float()
     print(XT_lstm.shape)
     XT = XT_lstm.transpose(1,2).float() #input is (N, Cin, Lin) = Ntimesteps, Nfeatures, 128
     print(XT.shape)
@@ -92,9 +95,16 @@ if __name__ == '__main__':
     n_features = 6 #XT.shape[1]
     n_outputs = 12 #yT.shape[1]
 
-    #%%
-    model = OneDCNN(n_timesteps, n_features, n_outputs)
-    train_model(train_dl, model, epoch=10)
-    model_evaluation(test_dl, model)
+    model = 2
+
+    if model == 2:
+        model = LSTM(n_timesteps, n_features, n_outputs)
+        train_model(train_lstm, model, epoch=10)
+        model_evaluation(test_lstm, model)
+
+    if model == 1:
+        model = OneDCNN(n_timesteps, n_features, n_outputs)
+        train_model(train_dl, model, epoch=10)
+        model_evaluation(test_dl, model)
 
 # %%

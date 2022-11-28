@@ -29,30 +29,32 @@ class LSTM(nn.Module):
 
     def __init__(self, n_timesteps, n_features, n_outputs):
         super(LSTM, self).__init__()
-        self.layer1 = nn.Sequential(
-            nn.Linear(n_timesteps, 256),
-            nn.ReLU())
-        self.layer2 = nn.LSTM(256, 256, 2)
+        self.layer2 = nn.LSTM(n_features, 64, 2, batch_first=True)
         self.layer3 = nn.Sequential(
-            nn.Linear(256, n_outputs),
+            nn.Linear(64, n_outputs),
             nn.Softmax(dim=1))
 
-    def step(self, input, hidden=None):
-        input = self.layer1(input).unsqueeze(1)
-        output, hidden = self.layer2(input, hidden)
-        output = self.layer3(output.squeeze(1))
-        return output, hidden
 
-    def forward(self, x, hidden=None):
-        outputs = torch.zeros(32, 6, 12)
-
-        for i in range(6):
-            input = x[:, i]
-
-            # print(input.shape)
-            output, hidden = self.step(input, hidden)
-
-            # print(output.shape)
-            outputs[:, i] = output
-
-        return outputs
+    def forward(self, x):
+        output, hidden = self.layer2(x)
+        out = self.layer3(output)
+        return out
+    # def step(self, input, hidden=None):
+    #     input = self.layer1(input).unsqueeze(1)
+    #     output, hidden = self.layer2(input, hidden)
+    #     output = self.layer3(output.squeeze(1))
+    #     return output, hidden
+    #
+    # def forward(self, x, hidden=None):
+    #     outputs = torch.zeros(32, 6, 12)
+    #
+    #     for i in range(6):
+    #         input = x[:, i]
+    #
+    #         # print(input.shape)
+    #         output, hidden = self.step(input, hidden)
+    #
+    #         # print(output.shape)
+    #         outputs[:, i] = output
+    #
+    #     return outputs

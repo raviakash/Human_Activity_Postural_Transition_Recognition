@@ -66,3 +66,5 @@ class LSTM(nn.Module):
     #     out = self.layer3(out)
     #     out = self.layer4(out)
     #     return out
+    # Das würde auch gehen, wenn nur das letzte Element der Sequence verwendet wird. Oder über flatten layer.
+    # out.shape = [32, 128, 12] muss aber [32, 12] sein

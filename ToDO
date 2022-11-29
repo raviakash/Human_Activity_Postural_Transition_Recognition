@@ -1,6 +1,8 @@
-- LSTM
+- LSTM verbessern
 - 1D CNN verbessern
 - SVM
 - Validation
 - Präsentation
 - Hyperparameter einstellen besser auflisten
+- Transformer oder SVM
+- Vegleich erstellen, Zeit messen

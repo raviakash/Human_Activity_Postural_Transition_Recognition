@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from DataGeneration import GenerateHARData, GenerateHAPTData, CSVDataset
 from torch.utils.data import Dataset, random_split, DataLoader
 from sklearn.metrics import accuracy_score
-from Pytorch_model import OneDCNN, LSTM
+from Pytorch_model import OneDCNN, LSTM, LSTM2, CNN_LSTM
 
 
 def train_model(train_dl, model, epoch):
@@ -61,7 +61,6 @@ def model_evaluation(test_dl, model):
     print(f"Test Accuracy: {acc}")
 
 
-#%%
 if __name__ == '__main__':
     device = torch.device('cpu')
     if torch.cuda.is_available():
@@ -71,7 +70,9 @@ if __name__ == '__main__':
     X, y = GenerateHAPTData().run()
     # transform data
     XT_lstm = torch.from_numpy(X).float()
+    print(XT_lstm.shape)
     XT = XT_lstm.transpose(1,2).float() #input is (N, Cin, Lin) = Ntimesteps, Nfeatures, 128
+    print(XT.shape)
     yT = torch.from_numpy(y).float()
 
     data = CSVDataset(XT, yT)
@@ -90,18 +91,20 @@ if __name__ == '__main__':
     n_features = 6 #XT.shape[1]
     n_outputs = 12 #yT.shape[1]
 
-    model = 2
+    model = 3
 
     if model == 1:
         model = OneDCNN(n_timesteps, n_features, n_outputs)
-        train_model(train_dl, model, epoch=10)
+        train_model(train_dl, model, epoch=20)
         model_evaluation(test_dl, model)
 
     if model == 2:
         model = LSTM(n_timesteps, n_features, n_outputs)
+        train_model(train_lstm, model, epoch=40)
+        model_evaluation(test_lstm, model)
+
+    if model == 3:
+        model = LSTM2(n_timesteps, n_features, n_outputs)
         train_model(train_lstm, model, epoch=10)
         model_evaluation(test_lstm, model)
 
-
-
-# %%

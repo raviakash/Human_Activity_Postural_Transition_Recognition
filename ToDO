@@ -1,8 +1,12 @@
-- LSTM verbessern
-- 1D CNN verbessern
-- SVM
-- Validation
-- Präsentation
-- Hyperparameter einstellen besser auflisten
-- Transformer oder SVM
-- Vegleich erstellen, Zeit messen
+- improve LSTM, CNN LSTM
+- improve 1D CNN
+- metrics, visualization -> tensorboard
+- Presentation Power point
+- comparison regarding time, accuracy
+    - try different optimizer, architectures, loss functions, dynamic learning rate, initialization, different hyperparameters
+- transfer learning, few-shot learning
+    - balancing the data
+- improve data generation
+    - try to use the 561 extracted features instead of raw data
+    - Validation set
+- Transformer, GRU or SVM

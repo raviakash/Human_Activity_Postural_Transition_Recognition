@@ -127,3 +127,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+CNN_TensorFlow/Adam_SGD 10_32/Adam accuracy.png
+CNN_TensorFlow/Adam_SGD 10_32/SGD accuracy.png

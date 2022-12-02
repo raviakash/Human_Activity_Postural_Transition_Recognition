@@ -131,3 +131,5 @@ CNN_TensorFlow/Adam_SGD 10_32/Adam accuracy.png
 CNN_TensorFlow/Adam_SGD 10_32/SGD accuracy.png
 CNN_TensorFlow/Adam_SGD 15_64/Adam accuracy.png
 CNN_TensorFlow/Adam_SGD 15_64/SGD accuracy.png
+CNN_TensorFlow/Adam_SGD 20_128/Adam accuracy.png
+CNN_TensorFlow/Adam_SGD 20_128/SGD accuracy.png

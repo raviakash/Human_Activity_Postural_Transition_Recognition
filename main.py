@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import numpy as np
 import matplotlib.pyplot as plt
-from DataGeneration import GenerateHARData, GenerateHAPTData, CSVDataset
-from torch.utils.data import Dataset, random_split, DataLoader
+from DataGeneration import GenerateHAPTData, CSVDataset
+from torch.utils.data import DataLoader
 from sklearn.metrics import accuracy_score
 from Pytorch_model import OneDCNN, LSTM, LSTM2, CNN_LSTM
 
@@ -91,11 +91,11 @@ if __name__ == '__main__':
     n_features = 6 #XT.shape[1]
     n_outputs = 12 #yT.shape[1]
 
-    model = 3
+    model = 1
 
     if model == 1:
         model = OneDCNN(n_timesteps, n_features, n_outputs)
-        train_model(train_dl, model, epoch=20)
+        train_model(train_dl, model, epoch=10)
         model_evaluation(test_dl, model)
 
     if model == 2:
@@ -105,6 +105,11 @@ if __name__ == '__main__':
 
     if model == 3:
         model = LSTM2(n_timesteps, n_features, n_outputs)
+        train_model(train_lstm, model, epoch=10)
+        model_evaluation(test_lstm, model)
+
+    if model == 4:
+        model = CNN_LSTM(n_timesteps, n_features, n_outputs)
         train_model(train_lstm, model, epoch=10)
         model_evaluation(test_lstm, model)
 

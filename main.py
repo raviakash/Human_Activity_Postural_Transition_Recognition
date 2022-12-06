@@ -47,6 +47,7 @@ def train_model(train_dl, model, epoch):
     plt.plot(accuracy)
     plt.show()
 
+
 def model_evaluation(test_dl, model):
     predictions, actuals = list(), list()
     for i, (inputs, targets) in enumerate(test_dl):
@@ -91,16 +92,16 @@ if __name__ == '__main__':
     n_features = 6 #XT.shape[1]
     n_outputs = 12 #yT.shape[1]
 
-    model = 1
+    model = 2
 
     if model == 1:
         model = OneDCNN(n_timesteps, n_features, n_outputs)
-        train_model(train_dl, model, epoch=10)
+        train_model(train_dl, model, epoch=15)
         model_evaluation(test_dl, model)
 
     if model == 2:
         model = LSTM(n_timesteps, n_features, n_outputs)
-        train_model(train_lstm, model, epoch=40)
+        train_model(train_lstm, model, epoch=15)
         model_evaluation(test_lstm, model)
 
     if model == 3:

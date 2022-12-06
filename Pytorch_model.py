@@ -31,18 +31,21 @@ class LSTM(nn.Module):
     def __init__(self, n_timesteps, n_features, n_outputs):
         super(LSTM, self).__init__()
 
-        self.lstm = nn.LSTM(6, 128, 2, batch_first=True)
+        self.lstm = nn.LSTM(6, 128, 1, batch_first=True)
+        self.hidden = nn.Sequential(
+            nn.Linear(128, 100),
+            nn.ReLU())
         self.out = nn.Sequential(
-            nn.Linear(128, n_outputs),
+            nn.Linear(100, n_outputs),
             nn.Softmax(dim=1))
 
     def forward(self, x):
+
         output, hidden = self.lstm(x)
-        #print(output.shape)
-        output = output[:, 127, :]
-        #print(output.shape)
-        out = self.out(output.squeeze(1))
+        out = self.hidden(output[:, -1, :])
+        out = self.out(out)
         return out
+
 
 class CNN_LSTM(nn.Module):
 

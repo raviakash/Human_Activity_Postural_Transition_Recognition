@@ -1,5 +1,6 @@
 - improve LSTM, CNN LSTM
 - improve 1D CNN
+- LSTM tensorflow
 - metrics, visualization -> tensorboard
 - Presentation Power point
 - comparison regarding time, accuracy
@@ -9,5 +10,7 @@
 - improve data generation
     - try to use the 561 extracted features instead of raw data
     - Validation set
-    - 50% overlap off 128 windows?
 - Transformer, GRU or SVM
+
+Done:
+- 50% overlap off 128 windows

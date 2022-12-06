@@ -1,16 +1,30 @@
-- improve LSTM, CNN LSTM
-- improve 1D CNN
-- LSTM tensorflow
 - metrics, visualization -> tensorboard
 - Presentation Power point
 - comparison regarding time, accuracy
-    - try different optimizer, architectures, loss functions, dynamic learning rate, initialization, different hyperparameters
+    - try different optimizers, architectures, loss functions, dynamic learning rate, initialization, different hyperparameters
 - transfer learning, few-shot learning
     - balancing the data
-- improve data generation
-    - try to use the 561 extracted features instead of raw data
-    - Validation set
-- Transformer, GRU or SVM
+- try to use the 561 extracted features instead of raw data -> SVM, DNN -> pros and cons
+- Validation set
+- Transformer, GRU
+- pros and cons between different models
+- relationship between performance and model complexity
 
 Done:
 - 50% overlap off 128 windows
+- LSTM tensorflow
+- improve LSTM, CNN LSTM
+- understand data generation
+
+Questions:
+- LSTM in pytorch - what is wrong?
+
+
+
+
+Project hints
+Accuracy is not everything, you can use the features extracted by UCI HAR dataset (e.g. max, min values) and conventional machine learning algorihtm (e.g. SVM, logistic regression). Recording your findings and analyzing the pros and cons for both sides is a good direction to think about.
+
+There are more sophisticated deep learning models available for time-series data (e.g. LSTM, transformer). Investigating the pros and cons between different models is very interesting.
+
+For the same algorithm, e.g. 1D CNN, different hyperparameter setting leads to different levels of model complexity. You can investigate the relationship between model performance and model complexity, what can you notice? and try to explain why.

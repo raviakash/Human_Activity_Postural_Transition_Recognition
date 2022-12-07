@@ -30,7 +30,7 @@ class GenerateHAPTData():
         start_indeces = [start]
         window_len = 128
         while True:
-            start += 64
+            start += 128
             if start + window_len > end:
                 break
             start_indeces.append(start)

@@ -72,9 +72,9 @@ class LSTM2(nn.Module):
         super(LSTM2, self).__init__()
 
         self.inp = nn.Linear(n_features, 128)
-        self.lstm = nn.LSTM(128, 128, 2, batch_first=True)
+        self.lstm = nn.LSTM(128, 128, 2, batch_first=True, bidirectional=True)
         self.out = nn.Sequential(
-            nn.Linear(128, n_outputs),
+            nn.Linear(256, n_outputs),
             nn.Softmax(dim=1))
 
     def step(self, input, hidden=None):

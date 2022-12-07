@@ -1,4 +1,7 @@
 - metrics, visualization -> tensorboard
+- confusion matrix
+    - compare cnn and lstm
+- dataset split
 - Presentation Power point
 - comparison regarding time, accuracy
     - try different optimizers, architectures, loss functions, dynamic learning rate, initialization, different hyperparameters
@@ -7,8 +10,10 @@
 - try to use the 561 extracted features instead of raw data -> SVM, DNN -> pros and cons
 - Validation set
 - Transformer, GRU
+- bidirectional lstm
 - pros and cons between different models
 - relationship between performance and model complexity
+- keep unlabeled data during training
 
 Done:
 - 50% overlap off 128 windows

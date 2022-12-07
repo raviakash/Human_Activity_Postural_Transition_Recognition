@@ -66,9 +66,9 @@ def create_cnn_lstm_model(X_train, y_train):
     return model
 
 
-#model = create_model(x_tr, y_tr)
+model = create_model(x_tr, y_tr)
 #model = create_lstm_model(x_tr, y_tr)
-model = create_cnn_lstm_model(x_tr, y_tr)
+#model = create_cnn_lstm_model(x_tr, y_tr)
 
 # graphical visualization
 # keras.utils.plot_model(model, show_shapes=True)

@@ -3,6 +3,11 @@
     - compare cnn and lstm
     - manual training loop
 - dataset split
+    - sliding window -> create test data from users 27-30 and train from 1-26
+    - include unlabeled data
+    - check numbers of classes in test and train set
+- number of samples per class
+    - oversample transitions
 - Presentation Power point
 - comparison regarding time, accuracy
     - try different optimizers, architectures, loss functions, dynamic learning rate, initialization, different hyperparameters

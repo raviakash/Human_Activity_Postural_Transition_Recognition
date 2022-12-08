@@ -1,8 +1,10 @@
 import tensorflow as tf
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from tensorflow import keras
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from DataGeneration import GenerateHAPTData, CSVDataset
+import numpy as np
 
 X, y = GenerateHAPTData().run()
 X = X.astype('float32')
@@ -103,3 +105,30 @@ plt.show()
 
 test_loss, test_acc = model.evaluate(x_ts, y_ts, batch_size=batch_size, verbose=1)
 print('\nTest accuracy:', test_acc)
+
+
+# Create confusion matrix for tensorflow model
+
+class_names = ['Walking',
+          'Walking_Upstairs',
+          'Walking_Downstairs',
+          'Sitting',
+          'Standing',
+          'Laying',
+          'Stand_to_Sit',
+          'Sit_to_Stand',
+          'Sit_to_Lie',
+          'Lie_to_Sit'
+          'Stand_to_Lie',
+          'Lie_to_Stand']
+
+
+predictions = model.predict(x_ts)
+predictions = np.argmax(predictions, axis=1)
+labels = np.argmax(y_ts, axis=1)
+cm = confusion_matrix(labels, predictions)
+print(cm)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.show()
+

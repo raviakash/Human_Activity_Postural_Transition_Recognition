@@ -110,25 +110,25 @@ print('\nTest accuracy:', test_acc)
 # Create confusion matrix for tensorflow model
 
 class_names = ['Walking',
-          'Walking_Upstairs',
-          'Walking_Downstairs',
-          'Sitting',
-          'Standing',
-          'Laying',
-          'Stand_to_Sit',
-          'Sit_to_Stand',
-          'Sit_to_Lie',
-          'Lie_to_Sit'
-          'Stand_to_Lie',
-          'Lie_to_Stand']
+          'WalkUp',
+          'WalkDown',
+          'Sit',
+          'Stand',
+          'Lay',
+          'StandSit',
+          'SitStand',
+          'SitLie',
+          'LieSit',
+          'StandLie',
+          'LieStand']
 
 
 predictions = model.predict(x_ts)
 predictions = np.argmax(predictions, axis=1)
 labels = np.argmax(y_ts, axis=1)
-cm = confusion_matrix(labels, predictions)
+cm = confusion_matrix(labels, predictions, normalize='true')
 print(cm)
-disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
 disp.plot()
 plt.show()
 

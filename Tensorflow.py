@@ -12,21 +12,15 @@ Y = y.astype('float32')
 x_tr, x_ts, y_tr, y_ts = train_test_split(X, Y, test_size=0.2, shuffle=True)
 
 
+#oversampling transitions in training data
 labels_train = np.argmax(y_tr, axis=1)
 mask = np.where(labels_train > 5)[0]
 x_over = x_tr[mask]
 y_over = y_tr[mask]
 
-x_tr_over = np.concatenate((x_tr, x_over), axis=0)
-y_tr_over = np.concatenate((y_tr, y_over), axis=0)
-
-labels_total = np.argmax(Y, axis=1)
-labels_train = np.argmax(y_tr, axis=1)
-labels_test = np.argmax(y_ts, axis=1)
-
-print(np.bincount(labels_total))
-print(np.bincount(labels_train))
-print(np.bincount(labels_test))
+for i in range(10):
+  x_tr = np.concatenate((x_tr, x_over), axis=0)
+  y_tr = np.concatenate((y_tr, y_over), axis=0)
 
 def create_model(X_train, y_train):
     n_timesteps = X_train.shape[1]

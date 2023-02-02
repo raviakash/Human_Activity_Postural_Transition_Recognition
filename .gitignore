@@ -136,3 +136,6 @@ CNN_TensorFlow/Adam_SGD 20_128/SGD accuracy.png
 CNN_TensorFlow/BO_SGD 20_128/runtime.JPG
 CNN_TensorFlow/BO_SGD 15_64/BO_Adam_15_64.ipynb
 CNN_TensorFlow/BO_SGD 20_128/BO_Adam_20_128.ipynb
+*.JPG
+*.xlsx
+*.xlsx
